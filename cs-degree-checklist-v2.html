@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CS Class of 2027 — Degree Checklist</title>
+<link rel="stylesheet" href="cs-degree-checklist-v2.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="titlebox">
+    <b>Four Year Grid for CS Class of 2027 (version 6)</b>
+    <i>Minimum graduating requirement is 130 Credit Hours — interactive checklist</i>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="barInner"></div></div>
+    <div class="progress-label" id="progressLabel">0 of 0 requirements checked</div>
+  </div>
+
+  <div class="layout">
+    <div class="maingrid" id="maingrid"></div>
+
+    <div class="sidepanels">
+      <div class="panel">
+        <h3>Habib Liberal Core Requirements</h3>
+        <div class="panel-swatch" style="background:var(--darkblue);color:#fff;">Formal Reasoning <span style="float:right">1</span></div>
+        <div class="panel-swatch" style="background:var(--green);">Quantitative Reasoning <span style="float:right">1</span></div>
+        <div class="panel-swatch" style="background:var(--yellow);">Creative Practice** <span style="float:right">1</span></div>
+        <div class="panel-swatch" style="background:var(--core-orange);">Natural Scientific Method &amp; Analysis <span style="float:right">1</span></div>
+        <div class="panel-swatch" style="background:var(--core-orange);">Philosophical Thought <span style="float:right">2</span></div>
+        <div class="panel-swatch" style="background:var(--core-orange);">Historical and Social Thought <span style="float:right">2</span></div>
+        <div class="panel-swatch" style="background:var(--core-orange);">Language and Expression <span style="float:right">2</span></div>
+      </div>
+
+      <div class="panel">
+        <h3>CS Program Requirements</h3>
+        <div class="panel-swatch" style="background:var(--blue);">CS Foundation</div>
+        <div class="panel-swatch" style="background:var(--purple);color:#fff;">CS Kernel</div>
+        <div class="panel-swatch" style="background:var(--purpledeep);color:#fff;">CS Elective</div>
+        <div class="panel-swatch" style="background:var(--purpledeep);color:#fff;">CS Requirement</div>
+      </div>
+
+      <div class="panel">
+        <h3>Other Requirements</h3>
+        <div class="panel-swatch" style="background:var(--gray);">Mathematics Requirement</div>
+        <div class="panel-swatch" style="background:#fff;border-top:1px solid #eee;">Free Elective*</div>
+        <div class="panel-swatch" style="background:var(--natsci);">Natural Science</div>
+        <div class="panel-swatch" style="background:var(--gray);">Professional Practice</div>
+      </div>
+
+      <div class="grid-title">**Creative Practice requirement is currently<br>fulfilled via CS 353 Software Engineering</div>
+    </div>
+  </div>
+
+  <button class="reset-btn" id="resetBtn">Reset all checkboxes</button>
+
+  <footer>
+    <p>* The number of free electives attempted must be such that the total number of credit hours is at least 130. Any course offered at the university, including CS electives, can be counted as a Free Elective. The quantity and semester placement of the free electives shown above is for guidance only.</p>
+    <p>± Currently, CS 330 – Computer Architecture is offered as a CS System Requirement in the CS grid.</p>
+    <p>— All Core, CS, and other requirements must be met.</p>
+    <p>— A course may simultaneously fulfill multiple requirements if they are shown in the same color.</p>
+    <p>— Extra courses must be taken in consultation with the advisor to meet any credit shortfall.</p>
+    <p>— At least one Natural Science course with lab is mandatory. NS course with lab or without lab can be taken in any order.</p>
+    <p>— Any CS Electives with a lab component (3+1) is counted as one course. A student must pass both Theory and Lab to qualify for the course.</p>
+    <p>— PLAY 113 Design your Habib Experience must be taken in the first or the second semester only.</p>
+    <p>— Khidmat is an additional 0-credit hour course requirement ideally to be taken in Summer Semester 2.</p>
+  </footer>
+
+</div>
+
+<script src="cs-degree-checklist-v2.js"></script>
+</body>
+</html>
