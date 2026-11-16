@@ -160,6 +160,15 @@ function applyStateToDOM(){
 }
 
 maingrid.addEventListener("click", e => {
+  const unassign = e.target.closest(".unassign");
+  if(unassign){
+    const key = unassign.closest("[data-key]").dataset.key;
+    delete my.assign[key];
+    saveMy();
+    setChecked(key, false);
+    renderCourses();
+    return;
+  }
   const box = e.target.closest(".box:not(.empty)");
   const khidmat = e.target.closest(".khidmat-bar");
   const target = box || khidmat;
@@ -183,6 +192,120 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   checklistState = {};
   saveState(checklistState);
   updateProgress();
+  my.assign = {};
+  saveMy();
+  renderCourses();
+});
+
+/* ---------- My Courses: add, then drag onto a requirement box ---------- */
+// localStorage, not the cookie: a full course list would blow the ~4KB cookie limit.
+const COURSES_KEY = "cs2027_courses";
+function loadMy(){
+  try{ return JSON.parse(localStorage.getItem(COURSES_KEY)) || {courses:[], assign:{}}; }
+  catch(e){ return {courses:[], assign:{}}; }
+}
+function saveMy(){
+  try{ localStorage.setItem(COURSES_KEY, JSON.stringify(my)); } catch(e){}
+}
+let my = loadMy(); // {courses:[{code,name}], assign:{boxKey: code}}
+
+const courseList = document.getElementById("courseList");
+
+function setChecked(key, on){
+  const el = document.querySelector(`[data-key="${key}"]`);
+  const cb = el.querySelector('input[type="checkbox"]');
+  cb.checked = on;
+  el.classList.toggle("checked", on);
+  checklistState[cb.id] = on;
+  saveState(checklistState);
+  updateProgress();
+}
+
+function makeBtn(cls, title){
+  const b = document.createElement("button");
+  b.type = "button"; b.className = cls; b.title = title; b.textContent = "×";
+  return b;
+}
+
+function renderCourses(){
+  const used = new Set(Object.values(my.assign));
+  courseList.replaceChildren(...my.courses.map(c => {
+    const li = document.createElement("li");
+    li.className = "course-chip" + (used.has(c.code) ? " used" : "");
+    li.draggable = true;
+    li.dataset.code = c.code;
+    const label = document.createElement("span");
+    label.innerHTML = "<b></b> ";
+    label.firstChild.textContent = c.code;
+    label.append(c.name);
+    li.append(label, makeBtn("del", "Delete course"));
+    return li;
+  }));
+
+  document.querySelectorAll("#maingrid [data-key]").forEach(el => {
+    el.querySelector(".assigned")?.remove();
+    const c = my.courses.find(c => c.code === my.assign[el.dataset.key]);
+    if(!c) return;
+    const a = document.createElement("div");
+    a.className = "assigned";
+    a.textContent = `${c.code} — ${c.name}`;
+    a.append(makeBtn("unassign", "Remove course from this requirement"));
+    el.insertBefore(a, el.querySelector(".box-bottom")); // null → append (Khidmat bar)
+  });
+}
+
+document.getElementById("courseForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const code = document.getElementById("courseCode").value.trim();
+  const name = document.getElementById("courseName").value.trim();
+  if(!code || !name) return;
+  const existing = my.courses.find(c => c.code === code);
+  if(existing) existing.name = name; else my.courses.push({code, name});
+  saveMy();
+  renderCourses();
+  e.target.reset();
+  document.getElementById("courseCode").focus();
+});
+
+courseList.addEventListener("click", e => {
+  if(!e.target.closest(".del")) return;
+  const code = e.target.closest(".course-chip").dataset.code;
+  my.courses = my.courses.filter(c => c.code !== code);
+  for(const [key, c] of Object.entries(my.assign)){
+    if(c === code){ delete my.assign[key]; setChecked(key, false); }
+  }
+  saveMy();
+  renderCourses();
+});
+
+courseList.addEventListener("dragstart", e => {
+  const chip = e.target.closest(".course-chip");
+  if(chip) e.dataTransfer.setData("text/plain", chip.dataset.code);
+});
+
+const dropTarget = e => e.target.closest("#maingrid [data-key]");
+maingrid.addEventListener("dragover", e => {
+  const t = dropTarget(e);
+  if(!t) return;
+  e.preventDefault();
+  t.classList.add("drop-over");
+});
+maingrid.addEventListener("dragleave", e => {
+  const t = dropTarget(e);
+  if(t && !t.contains(e.relatedTarget)) t.classList.remove("drop-over");
+});
+maingrid.addEventListener("drop", e => {
+  const t = dropTarget(e);
+  if(!t) return;
+  e.preventDefault();
+  t.classList.remove("drop-over");
+  const code = e.dataTransfer.getData("text/plain");
+  if(!my.courses.some(c => c.code === code)) return;
+  my.assign[t.dataset.key] = code;
+  saveMy();
+  setChecked(t.dataset.key, true);
+  renderCourses();
 });
 
 applyStateToDOM();
+renderCourses();

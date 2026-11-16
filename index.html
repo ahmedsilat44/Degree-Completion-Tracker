@@ -23,6 +23,16 @@
 
     <div class="sidepanels">
       <div class="panel">
+        <h3>My Courses — drag onto a requirement</h3>
+        <form id="courseForm" class="course-form">
+          <input id="courseCode" placeholder="Code (e.g. CS 101)" required>
+          <input id="courseName" placeholder="Course name" required>
+          <button>Add course</button>
+        </form>
+        <ul id="courseList" class="course-list"></ul>
+      </div>
+
+      <div class="panel">
         <h3>Habib Liberal Core Requirements</h3>
         <div class="panel-swatch" style="background:var(--darkblue);color:#fff;">Formal Reasoning <span style="float:right">1</span></div>
         <div class="panel-swatch" style="background:var(--green);">Quantitative Reasoning <span style="float:right">1</span></div>
